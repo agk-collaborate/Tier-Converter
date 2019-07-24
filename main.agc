@@ -23,7 +23,7 @@ SetPrintSize(10)
 
 global arr as string[]
 
-ParseTier1("mainMenu.agc", arr)
+ParseTier1("example_code/mainMenu.agc", arr)
 
 do
 	Print(ScreenFPS())
