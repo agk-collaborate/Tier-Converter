@@ -30,10 +30,10 @@ type t_Main_Menu rem blyat
 	
 	created as integer rem blyat
 	active as integer rem blyat
-endtype rem blyat
+endtype // blyat
 
 
-global mainmenu as t_Main_Menu rem blyat
+global mainmenu as t_Main_Menu // blyat
 
 
 
