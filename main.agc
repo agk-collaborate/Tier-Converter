@@ -37,11 +37,19 @@ ParseTier1("example_code/mainMenu.agc", arr)
 
 //~ExtractVariable("cuntVariable = 123")
 //~ExtractVariable("cuntVariable# = 123.321")
-ExtractVariable("cuntVariable$ = " + CHR_QUOTE + "123 Big ol buttholes me boi" + CHR_QUOTE)
+//~ExtractVariable("cuntVariable$ = " + CHR_QUOTE + "123 Big ol buttholes me boi" + CHR_QUOTE)
 
 //~ExtractVariable("cuntVariable as integer = 123")
 //~ExtractVariable("cuntVariable as float = 123.321")
-//~ExtractVariable("cuntVariable as string = " + CHR_QUOTE + "123 Big ol buttholes me boi" + CHR_QUOTE)
+ExtractVariable("cuntVariable as string = " + CHR_QUOTE + "123 Big ol buttholes me boi" + CHR_QUOTE)
+
+//~ExtractVariable("cuntVariable=123")
+//~ExtractVariable("cuntVariable#=123.321")
+//~ExtractVariable("cuntVariable$=" + CHR_QUOTE + "123 Big ol buttholes me boi" + CHR_QUOTE)
+
+//~ExtractVariable("global cuntVariable=123")
+//~ExtractVariable("global cuntVariable#=123.321")
+//~ExtractVariable("global cuntVariable$=" + CHR_QUOTE + "123 Big ol buttholes me boi" + CHR_QUOTE)
 
 do
 	Print(ScreenFPS())

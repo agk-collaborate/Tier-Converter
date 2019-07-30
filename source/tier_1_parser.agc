@@ -37,87 +37,163 @@ endfunction _nv
 function ExtractVariable(_line$)
 	_nv as t_Variable
 	_islands as string[]
-	_backup as string[]
-	for i = 1 to CountStringTokens(_line$, CHR_SPACE + CHR_TAB)
-		_islands.insert(GetStringToken(_line$, CHR_SPACE + CHR_TAB, i))
-	next i
-	_backup = _islands
+//~	_backup as string[]
 	
-	if CompareString(_islands[0], "global")
-		_nv.scope = "global"
-		_islands.remove(0)
-	elseif CompareString(_islands[0], "local")
-		_nv.scope = "local"
-		_islands.remove(0)
-	else
-		_nv.scope = "local"
-	endif
-	
-	_nv.name = _islands[0]
-	_islands.remove(0)
-	
-	if CompareString(_islands[0], "as")
-		_islands.remove(0)
-		
-		if CompareString(_islands[0], "integer")
-			_nv._type = "integer"
+	if FindStringCount(GetStringToken2(_line$, "=", 1), CHR_SPACE) < 2 and FindString(_line$, "=") and not FindString(_line$, " as ")
+//~		if FindStringCount(_line$, CHR_QUOTE) > 0
+//~			_name$ = GetStringToken2(_line$, "=", 1)
+//~			_val$ = GetStringToken2(_line$, "=", 2)
+//~			
+//~			if FindStringCount(_name$, CHR_SPACE) > 0
+//~				for i = 1 to CountStringTokens(_name$, CHR_SPACE + CHR_TAB)
+//~					_islands.insert(GetStringToken(_name$, CHR_SPACE + CHR_TAB, i))
+//~				next i
+//~				_backup = _islands
+//~			else
+//~				_islands.insert(_name$)
+//~			endif
+//~			
+//~			if CompareString(_islands[0], "global")
+//~				_nv.scope = "global"
+//~				_islands.remove(0)
+//~			elseif CompareString(_islands[0], "local")
+//~				_nv.scope = "local"
+//~				_islands.remove(0)
+//~			else
+//~				_nv.scope = "local"
+//~			endif
+//~			
+//~			_nv.name = _islands[0]
+//~			_islands.remove(0)
+//~			
+//~			_nv._type = "string"
+//~			_nv.name = left(_nv.name, len(_nv.name) - 1)
+//~			
+//~			_nv.str_val = GetQuoteString(_val$)
+//~			
+//~		else
+			for i = 1 to CountStringTokens(_line$, CHR_SPACE + CHR_TAB + "=")
+				_islands.insert(GetStringToken(_line$, CHR_SPACE + CHR_TAB + "=", i))
+			next i
+//~			_backup = _islands
 			
-		elseif CompareString(_islands[0], "float")
-			_nv._type = "float"
+			if CompareString(_islands[0], "global")
+				_nv.scope = "global"
+				_islands.remove(0)
+			elseif CompareString(_islands[0], "local")
+				_nv.scope = "local"
+				_islands.remove(0)
+			else
+				_nv.scope = "local"
+			endif
 			
-		elseif CompareString(_islands[0], "string")
-			_nv._type = "string"
-		endif
-		
-		_islands.remove(0)
-		
-		if CompareString(_islands[0], "=")
+			_nv.name = _islands[0]
 			_islands.remove(0)
+			
+			if FindString(_nv.name, "#")
+				_nv._type = "float"
+				_nv.name = left(_nv.name, len(_nv.name) - 1)
+				
+			elseif FindString(_nv.name, "$")
+				_nv._type = "string"
+				_nv.name = left(_nv.name, len(_nv.name) - 1)
+				
+			else
+				_nv._type = "integer"
+			endif
+			
 			select _nv._type
 				case "integer":
 					_nv.int_val = val(_islands[0])
 				endcase
-				
 				case "float":
 					_nv.float_val = ValFloat(_islands[0])
 				endcase
-				
 				case "string":
 					_nv.str_val = GetQuoteString(_line$)
 				endcase
 			endselect
+			
 			_islands.remove(0)
+//~		endif
+		
+	else
+		for i = 1 to CountStringTokens(_line$, CHR_SPACE + CHR_TAB)
+			_islands.insert(GetStringToken(_line$, CHR_SPACE + CHR_TAB, i))
+		next i
+//~		_backup = _islands
+		
+		if CompareString(_islands[0], "global")
+			_nv.scope = "global"
+			_islands.remove(0)
+		elseif CompareString(_islands[0], "local")
+			_nv.scope = "local"
+			_islands.remove(0)
+		else
+			_nv.scope = "local"
 		endif
 		
-	elseif CompareString(_islands[0], "=")
+		_nv.name = _islands[0]
 		_islands.remove(0)
 		
-		if FindString(_nv.name, "#")
-			_nv._type = "float"
-			_nv.name = left(_nv.name, len(_nv.name) - 1)
+		if CompareString(_islands[0], "as")
+			_islands.remove(0)
 			
-		elseif FindString(_nv.name, "$")
-			_nv._type = "string"
-			_nv.name = left(_nv.name, len(_nv.name) - 1)
+			if CompareString(_islands[0], "integer")
+				_nv._type = "integer"
+				
+			elseif CompareString(_islands[0], "float")
+				_nv._type = "float"
+				
+			elseif CompareString(_islands[0], "string")
+				_nv._type = "string"
+			endif
 			
-		else
-			_nv._type = "integer"
+			_islands.remove(0)
+			
+			if CompareString(_islands[0], "=")
+				_islands.remove(0)
+				select _nv._type
+					case "integer":
+						_nv.int_val = val(_islands[0])
+					endcase
+					case "float":
+						_nv.float_val = ValFloat(_islands[0])
+					endcase
+					case "string":
+						_nv.str_val = GetQuoteString(_line$)
+					endcase
+				endselect
+				_islands.remove(0)
+			endif
+			
+		elseif CompareString(_islands[0], "=")
+			_islands.remove(0)
+			
+			if FindString(_nv.name, "#")
+				_nv._type = "float"
+				_nv.name = left(_nv.name, len(_nv.name) - 1)
+				
+			elseif FindString(_nv.name, "$")
+				_nv._type = "string"
+				_nv.name = left(_nv.name, len(_nv.name) - 1)
+				
+			else
+				_nv._type = "integer"
+			endif
+			
+			select _nv._type
+				case "integer":
+					_nv.int_val = val(_islands[0])
+				endcase
+				case "float":
+					_nv.float_val = ValFloat(_islands[0])
+				endcase
+				case "string":
+					_nv.str_val = GetQuoteString(_line$)
+				endcase
+			endselect
 		endif
-		
-		select _nv._type
-			case "integer":
-				_nv.int_val = val(_islands[0])
-			endcase
-			
-			case "float":
-				_nv.float_val = ValFloat(_islands[0])
-			endcase
-			
-			case "string":
-				_nv.str_val = GetQuoteString(_line$)
-			endcase
-		endselect
-		
 	endif
 	
 	
